@@ -1,49 +1,63 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import React from "react"
+import { Link } from "react-router-dom"
+import styles from './Vans.module.css'
 
 export default function Vans() {
-	const [vanObjects, setVanObjects] = useState([]);
-	const [error, setError] = useState('');
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch('/api/vans');
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				const data = await response.json();
-				console.log("this is data.vans");
-				console.log(data.vans);
-				setVanObjects(data.vans)
-			} catch (error) {
-				setError(error);
-			} finally {
+	const [vans, setVans] = React.useState([])
 
-			}
-		};
-		fetchData();
-	}, []);
+	React.useEffect(() => {
+		fetch("/api/vans")
+			.then(res => res.json())
+			.then(data => setVans(data.vans))
+	}, [])
+
+	const vansEls = vans.map(van => (
+		<Link
+			to={`/vans/${van.id}`}
+			key={van.id}
+			className={styles.vanCard}
+		>
+			<img
+				src={van.imageUrl}
+				alt={`Photo of ${van.name}`}
+				className={styles.vanImage}
+			/>
+			<div className={styles.vanInfo}>
+				<h3>{van.name}</h3>
+				<p>${van.price}/day</p>
+				{/* Add van type badge if you have it */}
+				{van.type && <span className={`${styles.vanType} ${styles[van.type]}`}>{van.type}</span>}
+			</div>
+		</Link>
+	))
+
 	return (
-		<>
-			{error ? (
-				<p>there was an error in the vans.jsx !</p>
-			) : (
-				<>
-					<h1>Vans page goes here 🚐</h1>
-					<ul>
-						{vanObjects.map(van =>
-							<li key={van.id}>
-								<Link to={`/vans/${van.id}`}>
-									<h1>this is {van.name}</h1>
-									<img src={van.imageUrl} alt={van.name} width={200} />
-									<p>price:${van.price}/day</p>
-								</Link>
-							</li>
-						)}
-					</ul>
-				</>
-			)
-			}
-		</>
-	);
+		<section className={styles.vansSection}>
+			<h1 className={styles.vansTitle}>Explore our van options</h1>
+
+			<div className={styles.vansContainer}>
+				{
+					vans.length > 0 ? (
+						<div className={styles.vansGrid}>
+							{vansEls}
+						</div>
+					) : (
+						<h2 className={styles.loading}>Loading...</h2>
+					)
+				}
+			</div>
+
+			<Link
+				to={'.'}
+				relative="path"
+				className={styles.toTopLink}
+				onClick={(e) => {
+					e.preventDefault();
+					window.scrollTo({ top: 0, behavior: "smooth" })
+				}}
+			>
+				<p>^ Back to top ^</p>
+			</Link>
+		</section>
+	)
 }

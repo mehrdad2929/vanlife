@@ -4,6 +4,7 @@ import styles from './HostVansDetailLayout.module.css';
 const HostVansDetailLayout = () => {
 	const params = useParams();
 	const [vanData, setVanData] = useState({});
+
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`/api/host/vans/${params.id}`);
@@ -13,53 +14,58 @@ const HostVansDetailLayout = () => {
 		}
 		fetchData();
 	}, [params.id]);
+
 	return (
-		<div>
-			{/*
-			*/}
-			<p>welcome to your van list page</p>
+		<div className={styles.container}>
 			<Link
 				to={'..'}
 				relative="path"
+				className={styles.backLink}
 			>
 				<p>{"<-- back to parent page"}</p>
 			</Link>
-			<div>
 
-				<h1>this is {vanData.name}</h1>
-				<img src={vanData.imageUrl} alt={vanData.name} width={200} />
-				<p>${vanData.price}/day</p>
+			<div className={styles.layout}>
+				<div className={styles.sidebar}>
+					<div className={styles.vanInfo}>
+						<h1>{vanData.name}</h1>
+						<img src={vanData.imageUrl} alt={vanData.name} />
+						<p>${vanData.price}/day</p>
+					</div>
+
+					<nav className={styles.navbar}>
+						<NavLink
+							to='.'
+							className={({ isActive }) =>
+								`${styles.navlink} ${isActive ? styles.active : ''}`
+							}
+							end
+						>
+							info
+						</NavLink>
+						<NavLink
+							to='pricing'
+							className={({ isActive }) =>
+								`${styles.navlink} ${isActive ? styles.active : ''}`
+							}
+						>
+							pricing
+						</NavLink>
+						<NavLink
+							to='photos'
+							className={({ isActive }) =>
+								`${styles.navlink} ${isActive ? styles.active : ''}`
+							}
+						>
+							photos
+						</NavLink>
+					</nav>
+				</div>
+
+				<section className={styles.content}>
+					<Outlet context={{ vanData }} />
+				</section>
 			</div>
-			<nav className={styles.navbar}>
-				<NavLink
-					to='.'
-					className={({ isActive }) =>
-						`${styles.navlink} ${isActive ? styles.active : ''}`
-					}
-					end
-				>
-					info
-				</NavLink>
-				<NavLink
-					to='pricing'
-					className={({ isActive }) =>
-						`${styles.navlink} ${isActive ? styles.active : ''}`
-					}
-				>
-					pricing
-				</NavLink>
-				<NavLink
-					to='photos'
-					className={({ isActive }) =>
-						`${styles.navlink} ${isActive ? styles.active : ''}`
-					}
-				>
-					photos
-				</NavLink>
-			</nav>
-			<section>
-				<Outlet context={{ vanData }} />
-			</section>
 		</div>
 	)
 }

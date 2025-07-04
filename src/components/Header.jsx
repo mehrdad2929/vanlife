@@ -3,7 +3,7 @@ import React from "react"
 import styles from "./Header.module.css"
 const Header = () => {
 	return (
-		<div>
+		<div className={styles.header}>
 			<Link className={styles.sitelogo} to="/">#VanLife</Link>
 			<nav className={styles.navbar}>
 				<NavLink

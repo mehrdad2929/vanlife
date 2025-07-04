@@ -1,8 +1,10 @@
 import React from "react"
 import { Link } from "react-router-dom"
+import styles from './HostVans.module.css'
 
 export default function HostVans() {
 	const [vans, setVans] = React.useState([])
+
 	React.useEffect(() => {
 		fetch("/api/host/vans")
 			.then(res => res.json())
@@ -13,33 +15,46 @@ export default function HostVans() {
 		<Link
 			to={`/host/vans/${van.id}`}
 			key={van.id}
-			className="host-van-link-wrapper"
+			className={styles.hostVanCard}
 		>
-			<div className="host-van-single" key={van.id}>
-				<img src={van.imageUrl} alt={`Photo of ${van.name}`} width={200} />
-				<div className="host-van-info">
-					<h3>{van.name}</h3>
-					<p>${van.price}/day</p>
-				</div>
+			<img
+				src={van.imageUrl}
+				alt={`Photo of ${van.name}`}
+				className={styles.hostVanImage}
+			/>
+			<div className={styles.hostVanInfo}>
+				<h3>{van.name}</h3>
+				<p>${van.price}/day</p>
 			</div>
 		</Link>
 	))
 
 	return (
 		<section>
-			<h1 className="host-vans-title">Your listed vans</h1>
-			<div className="host-vans-list">
+			<h1 className={styles.hostVansTitle}>Your listed vans</h1>
+			<div className={styles.hostVansContainer}>
 				{
 					vans.length > 0 ? (
-						<section>
+						<div className={styles.hostVansGrid}>
 							{hostVansEls}
-						</section>
-
+						</div>
 					) : (
-						<h2>Loading...</h2>
+						<h2 className={styles.loading}>Loading...</h2>
 					)
 				}
 			</div>
+			<Link
+				to={'.'}
+				relative="path"
+				className={styles.toTopLink}
+				onClick={(e) => {
+					e.preventDefault();
+					window.scrollTo({ top: 0, behavior: "smooth" })
+				}}
+			>
+				<p>^ Back to top ^</p>
+			</Link>
 		</section>
 	)
 }
+
