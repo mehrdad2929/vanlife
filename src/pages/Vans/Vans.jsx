@@ -35,6 +35,14 @@ export default function Vans() {
 		<section className={styles.vansSection}>
 			<h1 className={styles.vansTitle}>Explore our van options</h1>
 
+			{/* Add filter buttons if needed */}
+			<div className={styles.filtersContainer}>
+				<button className={styles.filterButton}>Simple</button>
+				<button className={styles.filterButton}>Luxury</button>
+				<button className={styles.filterButton}>Rugged</button>
+				<button className={styles.clearFilters}>Clear filters</button>
+			</div>
+
 			<div className={styles.vansContainer}>
 				{
 					vans.length > 0 ? (
