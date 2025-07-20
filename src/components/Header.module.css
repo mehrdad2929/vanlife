@@ -1,4 +1,6 @@
-.header {}
+.header {
+	background-color: white;
+}
 
 .navbar {
 	display: flex;

@@ -1,19 +1,29 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams, useLoaderData } from "react-router-dom"
 import styles from './Vans.module.css'
+import { getVans } from "../../api"
 
+export function loader() {
+	return getVans()
+}
 export default function Vans() {
-	const [vans, setVans] = React.useState([])
+	const [searchParams, setSearchParams] = useSearchParams();
+	const typeFilter = searchParams.get("type");
+	const vans = useLoaderData()
 
-	React.useEffect(() => {
-		fetch("/api/vans")
-			.then(res => res.json())
-			.then(data => setVans(data.vans))
-	}, [])
+	const displayedVans = typeFilter ? vans.filter(van => van.type === typeFilter.toLowerCase()) : vans;
 
-	const vansEls = vans.map(van => (
+	const handleFilterClick = (type) => {
+		setSearchParams({ type: type })
+	}
+
+	const clearFilters = () => {
+		setSearchParams({})
+	}
+
+	const vansEls = displayedVans.map(van => (
 		<Link
-			to={`/vans/${van.id}`}
+			to={van.id}
+			state={{ search: `?${searchParams.toString()}` }}
 			key={van.id}
 			className={styles.vanCard}
 		>
@@ -25,24 +35,41 @@ export default function Vans() {
 			<div className={styles.vanInfo}>
 				<h3>{van.name}</h3>
 				<p>${van.price}/day</p>
-				{/* Add van type badge if you have it */}
 				{van.type && <span className={`${styles.vanType} ${styles[van.type]}`}>{van.type}</span>}
 			</div>
 		</Link>
 	))
-
 	return (
 		<section className={styles.vansSection}>
 			<h1 className={styles.vansTitle}>Explore our van options</h1>
-
-			{/* Add filter buttons if needed */}
 			<div className={styles.filtersContainer}>
-				<button className={styles.filterButton}>Simple</button>
-				<button className={styles.filterButton}>Luxury</button>
-				<button className={styles.filterButton}>Rugged</button>
-				<button className={styles.clearFilters}>Clear filters</button>
+				<button
+					onClick={() => handleFilterClick("Simple")}
+					className={`${styles.filterButton} ${typeFilter === "Simple" ? styles.active : ""}`}
+				>
+					Simple
+				</button>
+				<button
+					onClick={() => handleFilterClick("Luxury")}
+					className={`${styles.filterButton} ${typeFilter === "Luxury" ? styles.active : ""}`}
+				>
+					Luxury
+				</button>
+				<button
+					onClick={() => handleFilterClick("Rugged")}
+					className={`${styles.filterButton} ${typeFilter === "Rugged" ? styles.active : ""}`}
+				>
+					Rugged
+				</button>
+				{typeFilter && (
+					<button
+						onClick={clearFilters}
+						className={styles.clearFilters}
+					>
+						Clear filters
+					</button>
+				)}
 			</div>
-
 			<div className={styles.vansContainer}>
 				{
 					vans.length > 0 ? (
@@ -54,7 +81,6 @@ export default function Vans() {
 					)
 				}
 			</div>
-
 			<Link
 				to={'.'}
 				relative="path"

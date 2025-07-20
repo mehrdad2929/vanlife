@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom"
 import React from "react"
 import styles from "./Header.module.css"
-const Header = () => {
+const Header = ({ isLoggedIn }) => {
 	return (
 		<div className={styles.header}>
 			<Link className={styles.sitelogo} to="/">#VanLife</Link>
@@ -42,6 +42,17 @@ const Header = () => {
 				>
 					About
 				</NavLink>
+				{isLoggedIn &&
+					<NavLink
+
+						className={({ isActive }) =>
+							`${styles.navlink} ${isActive ? styles.active : ''}`
+						}
+						to="/logout"
+					>
+						Logout
+					</NavLink>
+				}
 			</nav>
 		</div>
 	)
