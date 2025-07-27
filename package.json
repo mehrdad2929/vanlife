@@ -11,7 +11,8 @@
     "deploy": "npm run build"
   },
   "dependencies": {
-    "miragejs": "^0.1.48",
+    "firebase": "^12.0.0",
+    "firestore": "^1.1.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2"

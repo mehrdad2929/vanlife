@@ -4,8 +4,8 @@ import {
 	createRoutesFromElements,
 	redirect,
 	Route
-} from "react-router-dom"
-import "./server"
+} from "react-router"
+// import "./server"
 import Home from "./pages/Home"
 import About from "./pages/About"
 import Vans, { loader as vansLoader } from "./pages/Vans/Vans"

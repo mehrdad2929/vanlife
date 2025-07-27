@@ -3,7 +3,7 @@ import { Form, redirect } from "react-router-dom"
 export async function logoutAction() {
 	localStorage.setItem("loggedin", "false")
 	const redirectResponse = redirect("/")
-	redirectResponse.body = true
+	// redirectResponse.body = true
 	return redirectResponse
 }
 

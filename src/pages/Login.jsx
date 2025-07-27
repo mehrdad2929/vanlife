@@ -9,14 +9,14 @@ export async function loginAction({ request }) {
 		.searchParams.get("redirectTo") || "/host"
 	try {
 		const formData = await request.formData()
-		const submission = {
+		const creds = {
 			email: formData.get("email"),
 			password: formData.get("password")
 		}
-		const data = await loginUser(submission)
+		const data = await loginUser(creds)
 		localStorage.setItem("loggedin", "true")
 		const redirectResponse = redirect(pathname)
-		redirectResponse.body = true
+		// redirectResponse.body = true
 		return redirectResponse;
 	} catch (err) {
 		return { error: err.message, status: "error" }
